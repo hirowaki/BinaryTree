@@ -35,11 +35,11 @@ describe('SimpleBinaryTree.', function () {
 
     describe('insert, lookup', function () {
         const data = [
-            {id: 1, body: "DATA 1"},
-            {id: 2, body: "DATA 2"},
-            {id: 3, body: "DATA 3"},
-            {id: 4, body: "DATA 4"},
-            {id: 5, body: "DATA 5"}
+            {key: 1, body: "DATA 1"},
+            {key: 2, body: "DATA 2"},
+            {key: 3, body: "DATA 3"},
+            {key: 4, body: "DATA 4"},
+            {key: 5, body: "DATA 5"}
         ];
 
         let tree;
@@ -72,19 +72,19 @@ describe('SimpleBinaryTree.', function () {
 
             // lookup.
             const testCases = [
-                // search id 1. tracing 2 nodes.
-                {id: 1, expected: data[0], traceCount: 2},
-                // search id 2. tracing 3 nodes.
-                {id: 2, expected: null, traceCount: 3},
-                // search id 3. tracing only 1 node.
-                {id: 3, expected: data[2], traceCount: 1},
-                // search id 4. tracing 3 nodes.
-                {id: 4, expected: null, traceCount: 3},
-                // search id 5. tracing 2 nodes.
-                {id: 5, expected: data[4], traceCount: 2}
+                // search key 1. tracing 2 nodes.
+                {key: 1, expected: data[0], traceCount: 2},
+                // search key 2. tracing 3 nodes.
+                {key: 2, expected: null, traceCount: 3},
+                // search key 3. tracing only 1 node.
+                {key: 3, expected: data[2], traceCount: 1},
+                // search key 4. tracing 3 nodes.
+                {key: 4, expected: null, traceCount: 3},
+                // search key 5. tracing 2 nodes.
+                {key: 5, expected: data[4], traceCount: 2}
             ];
             testCases.forEach(function (testCase) {
-                assert.strictEqual(tree.lookup(testCase.id), testCase.expected);
+                assert.strictEqual(tree.lookup(testCase.key), testCase.expected);
                 assert.strictEqual(spyLookup.callCount, testCase.traceCount);
                 spyLookup.reset();
             });
@@ -116,19 +116,19 @@ describe('SimpleBinaryTree.', function () {
 
             // lookup.
             const testCases = [
-                // search id 1. tracing 2 nodes.
-                {id: 1, expected: data[0], traceCount: 2},
-                // search id 2. tracing 3 nodes.
-                {id: 2, expected: data[1], traceCount: 3},
-                // search id 3. tracing only 1 node.
-                {id: 3, expected: data[2], traceCount: 1},
-                // search id 4. tracing 2 nodes.
-                {id: 4, expected: data[3], traceCount: 2},
-                // search id 5. tracing 3 nodes.
-                {id: 5, expected: null, traceCount: 3}
+                // search key 1. tracing 2 nodes.
+                {key: 1, expected: data[0], traceCount: 2},
+                // search key 2. tracing 3 nodes.
+                {key: 2, expected: data[1], traceCount: 3},
+                // search key 3. tracing only 1 node.
+                {key: 3, expected: data[2], traceCount: 1},
+                // search key 4. tracing 2 nodes.
+                {key: 4, expected: data[3], traceCount: 2},
+                // search key 5. tracing 3 nodes.
+                {key: 5, expected: null, traceCount: 3}
             ];
             testCases.forEach(function (testCase) {
-                assert.strictEqual(tree.lookup(testCase.id), testCase.expected);
+                assert.strictEqual(tree.lookup(testCase.key), testCase.expected);
                 assert.strictEqual(spyLookup.callCount, testCase.traceCount);
                 spyLookup.reset();
             });
@@ -164,30 +164,30 @@ describe('SimpleBinaryTree.', function () {
 
             // lookup.
             const testCases = [
-                // search id 1. tracing 2 nodes.
-                {id: 1, expected: data[0], traceCount: 2},
-                // search id 2. tracing 3 nodes.
-                {id: 2, expected: data[1], traceCount: 3},
-                // search id 3. tracing only 1 node.
-                {id: 3, expected: data[2], traceCount: 1},
-                // search id 4. tracing 2 nodes.
-                {id: 4, expected: data[3], traceCount: 2},
-                // search id 5. tracing 3 nodes.
-                {id: 5, expected: data[4], traceCount: 3},
-                // search id 6. tracing 4 nodes.
-                {id: 6, expected: null, traceCount: 4}
+                // search key 1. tracing 2 nodes.
+                {key: 1, expected: data[0], traceCount: 2},
+                // search key 2. tracing 3 nodes.
+                {key: 2, expected: data[1], traceCount: 3},
+                // search key 3. tracing only 1 node.
+                {key: 3, expected: data[2], traceCount: 1},
+                // search key 4. tracing 2 nodes.
+                {key: 4, expected: data[3], traceCount: 2},
+                // search key 5. tracing 3 nodes.
+                {key: 5, expected: data[4], traceCount: 3},
+                // search key 6. tracing 4 nodes.
+                {key: 6, expected: null, traceCount: 4}
             ];
             testCases.forEach(function (testCase) {
-                assert.strictEqual(tree.lookup(testCase.id), testCase.expected);
+                assert.strictEqual(tree.lookup(testCase.key), testCase.expected);
                 assert.strictEqual(spyLookup.callCount, testCase.traceCount);
                 spyLookup.reset();
             });
         });
     });
 
-    describe.only('insert, error case.', function () {
+    describe('insert, error case.', function () {
         const data = [
-            {id: 1, body: "DATA 1"}
+            {key: 1, body: "DATA 1"}
         ];
 
         let tree;
@@ -200,12 +200,10 @@ describe('SimpleBinaryTree.', function () {
             // insert.
             assert.strictEqual(tree.insert(data[0]), this._root);
 
-            // insert. should get failed.
-            assert.throws(
-                () => {
-                    tree.insert(data[0]);
-                }, /Error: data\.id should be unique. 1/
-            );
+            // insert will overrite.
+            data[0].body = "OVER WRITTEN";
+            assert.strictEqual(tree.insert(data[0]), this._root);
+            assert.strictEqual(tree.lookup(data[0].key).body, "OVER WRITTEN");
         });
     });
 });
