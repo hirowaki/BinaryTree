@@ -1,0 +1,21 @@
+# https://github.com/gotwarlost/istanbul#configuring
+#   `istanbul help config`
+instrumentation:
+    root: .
+    default-excludes: true
+    # one or more fileset patterns e.g. "**/vendor/**"
+    excludes: [ ]
+reporting:
+  watermarks:
+    # very low tolerance on code coverage
+    statements: [99.99, 99.999]
+    lines: [99.99, 99.999]
+    functions: [99.99, 99.999]
+    branches: [99.99, 99.999]
+check:
+  global:
+    statements: 100
+    lines: 100
+    branches: 100
+    functions: 100
+    excludes: []

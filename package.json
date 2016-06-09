@@ -1,0 +1,24 @@
+{
+  "author": "hirowaki",
+  "name": "BinaryTree",
+  "description": "BinaryTree",
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=v4.3.0"
+  },
+  "scripts": {
+    "test": "NODE_ENV=test ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha ./test",
+    "posttest": "eslint app test; istanbul check-coverage",
+    "lint": "eslint ./"
+  },
+  "dependencies": {
+    "lodash": "*",
+    "bluebird": "*"
+  },
+  "devDependencies": {
+    "eslint": "*",
+    "mocha": "*",
+    "sinon": "*",
+    "istanbul": "*"
+  }
+}
