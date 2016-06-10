@@ -2,11 +2,12 @@
 /*eslint-disable no-console*/
 
 const _ = require('lodash');
+const assert = require('assert');
 const LLRBTree = require('./../lib/LLRBTree');
 const SimpleBinaryTree = require('./../lib/SimpleBinaryTree');
 
 // nanosec profiler.
-class ProfileTimer {
+class NanoTimer {
     constructor() {
         this._period = process.hrtime();
     }
@@ -37,7 +38,7 @@ function _benchMark(data) {
     });
 
     function _test(_func) {
-        const timer = new ProfileTimer;
+        const timer = new NanoTimer;
         _func();
         return timer.stop();
     }
@@ -46,13 +47,13 @@ function _benchMark(data) {
 
     return {
         linear: _test(() => {
-            _lenearSeach(buff, target);
+            assert.strictEqual(_lenearSeach(buff, target).id, target);
         }),
         simpleTree: _test(() => {
-            treeSimple.lookup(target);
+            assert.strictEqual(treeSimple.lookup(target).id, target);
         }),
         llrbTree: _test(() => {
-            treeLLRB.lookup(target);
+            assert.strictEqual(treeLLRB.lookup(target).id, target);
         })
     }
 }
