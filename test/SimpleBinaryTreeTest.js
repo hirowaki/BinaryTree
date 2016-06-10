@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 const sinon = require('sinon');
-const SimpleBinaryTree = require('./../lib/SimpleBinaryTree');
+const Tree = require('./../lib/SimpleBinaryTree').Tree;
 
 describe('SimpleBinaryTree.', function () {
     let sandbox;
@@ -17,7 +17,7 @@ describe('SimpleBinaryTree.', function () {
 
     describe('constructor', function () {
         it('simple call', function () {
-            const tree = new SimpleBinaryTree;
+            const tree = new Tree;
 
             assert.strictEqual(tree._root, null);
         });
@@ -25,7 +25,7 @@ describe('SimpleBinaryTree.', function () {
 
     describe('lookup, depth against empty tree.', function () {
         it('simple call', function () {
-            const tree = new SimpleBinaryTree;
+            const tree = new Tree;
 
             assert.strictEqual(tree._root, null);
             assert.strictEqual(tree.lookup(1), null);
@@ -34,37 +34,32 @@ describe('SimpleBinaryTree.', function () {
     });
 
     describe('insert, lookup', function () {
-        const data = [
-            {key: 1, body: "DATA 1"},
-            {key: 2, body: "DATA 2"},
-            {key: 3, body: "DATA 3"},
-            {key: 4, body: "DATA 4"},
-            {key: 5, body: "DATA 5"}
-        ];
-
         let tree;
         let spyLookup;
 
         beforeEach(function () {
-            tree = new SimpleBinaryTree;
-            spyLookup = sandbox.spy(SimpleBinaryTree, '_lookup');
+            tree = new Tree;
+            spyLookup = sandbox.spy(Tree, '_lookup');
         });
 
         it('3 elements, balanced', function () {
             // insert.
-            tree.insert(data[2]);   // 3
-            tree.insert(data[0]);   // 1
-            tree.insert(data[4]);   // 5
+            tree.insert(3, 'DATA 3');   // 3
+            tree.insert(1, 'DATA 1');   // 1
+            tree.insert(5, 'DATA 5');   // 5
 
             //    3
             //  1   5
             assert.deepEqual(tree._root, {
-                data: data[2],
-                left: {
-                    data: data[0]
+                _key: 3,
+                _data: 'DATA 3',
+                _left: {
+                    _key: 1,
+                    _data: 'DATA 1'
                 },
-                right: {
-                    data: data[4]
+                _right: {
+                    _key: 5,
+                    _data: 'DATA 5'
                 }
             });
 
@@ -73,15 +68,15 @@ describe('SimpleBinaryTree.', function () {
             // lookup.
             const testCases = [
                 // search key 1. tracing 2 nodes.
-                {key: 1, expected: data[0], traceCount: 2},
+                {key: 1, expected: 'DATA 1', traceCount: 2},
                 // search key 2. tracing 3 nodes.
                 {key: 2, expected: null, traceCount: 3},
                 // search key 3. tracing only 1 node.
-                {key: 3, expected: data[2], traceCount: 1},
+                {key: 3, expected: 'DATA 3', traceCount: 1},
                 // search key 4. tracing 3 nodes.
                 {key: 4, expected: null, traceCount: 3},
                 // search key 5. tracing 2 nodes.
-                {key: 5, expected: data[4], traceCount: 2}
+                {key: 5, expected: 'DATA 5', traceCount: 2}
             ];
             testCases.forEach(function (testCase) {
                 assert.strictEqual(tree.lookup(testCase.key), testCase.expected);
@@ -91,24 +86,28 @@ describe('SimpleBinaryTree.', function () {
         });
 
         it('4 elements, balanced', function () {
+            tree.insert(3, 'DATA 3');   // 3
+            tree.insert(1, 'DATA 1');   // 1
+            tree.insert(2, 'DATA 2');   // 2
+            tree.insert(4, 'DATA 4');   // 4
+
             //    3
             //  1   4
             // N 2
-            tree.insert(data[2]);   // 3.
-            tree.insert(data[0]);   // 1.
-            tree.insert(data[1]);   // 2.
-            tree.insert(data[3]);   // 4.
-
             assert.deepEqual(tree._root, {
-                data: data[2],
-                left: {
-                    data: data[0],
-                    right: {
-                        data: data[1]
+                _key: 3,
+                _data: 'DATA 3',
+                _left: {
+                    _key: 1,
+                    _data: 'DATA 1',
+                    _right: {
+                        _key: 2,
+                        _data: 'DATA 2'
                     }
                 },
-                right: {
-                    data: data[3]
+                _right: {
+                    _key: 4,
+                    _data: 'DATA 4'
                 }
             });
 
@@ -117,13 +116,13 @@ describe('SimpleBinaryTree.', function () {
             // lookup.
             const testCases = [
                 // search key 1. tracing 2 nodes.
-                {key: 1, expected: data[0], traceCount: 2},
+                {key: 1, expected: 'DATA 1', traceCount: 2},
                 // search key 2. tracing 3 nodes.
-                {key: 2, expected: data[1], traceCount: 3},
+                {key: 2, expected: 'DATA 2', traceCount: 3},
                 // search key 3. tracing only 1 node.
-                {key: 3, expected: data[2], traceCount: 1},
+                {key: 3, expected: 'DATA 3', traceCount: 1},
                 // search key 4. tracing 2 nodes.
-                {key: 4, expected: data[3], traceCount: 2},
+                {key: 4, expected: 'DATA 4', traceCount: 2},
                 // search key 5. tracing 3 nodes.
                 {key: 5, expected: null, traceCount: 3}
             ];
@@ -135,27 +134,32 @@ describe('SimpleBinaryTree.', function () {
         });
 
         it('5 elements, balanced', function () {
+            tree.insert(3, 'DATA 3');   // 3
+            tree.insert(1, 'DATA 1');   // 1
+            tree.insert(2, 'DATA 2');   // 2
+            tree.insert(4, 'DATA 4');   // 4
+            tree.insert(5, 'DATA 5');   // 5
+
             //    3
             //  1   4
             // N 2 N 5
-            tree.insert(data[2]);   // 3.
-            tree.insert(data[0]);   // 1.
-            tree.insert(data[1]);   // 2.
-            tree.insert(data[3]);   // 4.
-            tree.insert(data[4]);   // 5.
-
             assert.deepEqual(tree._root, {
-                data: data[2],
-                left: {
-                    data: data[0],
-                    right: {
-                        data: data[1]
+                _key: 3,
+                _data: 'DATA 3',
+                _left: {
+                    _key: 1,
+                    _data: 'DATA 1',
+                    _right: {
+                        _key: 2,
+                        _data: 'DATA 2'
                     }
                 },
-                right: {
-                    data: data[3],
-                    right: {
-                        data: data[4]
+                _right: {
+                    _key: 4,
+                    _data: 'DATA 4',
+                    _right: {
+                        _key: 5,
+                        _data: 'DATA 5'
                     }
                 }
             });
@@ -165,15 +169,15 @@ describe('SimpleBinaryTree.', function () {
             // lookup.
             const testCases = [
                 // search key 1. tracing 2 nodes.
-                {key: 1, expected: data[0], traceCount: 2},
+                {key: 1, expected: 'DATA 1', traceCount: 2},
                 // search key 2. tracing 3 nodes.
-                {key: 2, expected: data[1], traceCount: 3},
+                {key: 2, expected: 'DATA 2', traceCount: 3},
                 // search key 3. tracing only 1 node.
-                {key: 3, expected: data[2], traceCount: 1},
+                {key: 3, expected: 'DATA 3', traceCount: 1},
                 // search key 4. tracing 2 nodes.
-                {key: 4, expected: data[3], traceCount: 2},
+                {key: 4, expected: 'DATA 4', traceCount: 2},
                 // search key 5. tracing 3 nodes.
-                {key: 5, expected: data[4], traceCount: 3},
+                {key: 5, expected: 'DATA 5', traceCount: 3},
                 // search key 6. tracing 4 nodes.
                 {key: 6, expected: null, traceCount: 4}
             ];
@@ -186,24 +190,14 @@ describe('SimpleBinaryTree.', function () {
     });
 
     describe('insert, error case.', function () {
-        const data = [
-            {key: 1, body: "DATA 1"}
-        ];
-
-        let tree;
-
-        beforeEach(function () {
-            tree = new SimpleBinaryTree;
-        });
-
         it('trying to insert the same key should get an exeption.', function () {
+            const tree = new Tree;
             // insert.
-            assert.strictEqual(tree.insert(data[0]), this._root);
+            assert.strictEqual(tree.insert(1, "DATA 1"), this._root);
 
             // insert will overrite.
-            data[0].body = "OVER WRITTEN";
-            assert.strictEqual(tree.insert(data[0]), this._root);
-            assert.strictEqual(tree.lookup(data[0].key).body, "OVER WRITTEN");
+            assert.strictEqual(tree.insert(1, "OVER WRITTEN"), this._root);
+            assert.strictEqual(tree.lookup(1), "OVER WRITTEN");
         });
     });
 });
